@@ -105,3 +105,6 @@ dist
 
 # env 
 .env
+
+#yarn 
+yarn.lock

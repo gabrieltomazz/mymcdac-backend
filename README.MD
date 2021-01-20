@@ -15,3 +15,4 @@ Getting started
     * yarn add sequelize-cli ( ORM cli)
     * yarn add mysql2 (Database Mysql)
     * yarn add dotenv ( Build Global ENVORIMENT VARIABLES )
+    * yarn add bcryptjs ( Security random generation numbers )
