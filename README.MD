@@ -16,3 +16,5 @@ Getting started
     * yarn add mysql2 (Database Mysql)
     * yarn add dotenv ( Build Global ENVORIMENT VARIABLES )
     * yarn add bcryptjs ( Security random generation numbers )
+    * yarn add jsonwebtoken ( token provider )
+    * yarn add yup (Data validator )

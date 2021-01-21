@@ -14,11 +14,13 @@
     "dotenv": "^8.2.0",
     "eslint": "^7.17.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.2.5",
     "node": "^15.4.0",
     "nodemon": "^2.0.2",
     "sequelize": "^6.4.0",
     "sequelize-cli": "^6.2.0",
-    "sucrase": "^3.13.0"
+    "sucrase": "^3.13.0",
+    "yup": "^0.32.8"
   }
 }
