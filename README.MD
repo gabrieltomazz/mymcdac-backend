@@ -18,3 +18,13 @@ Getting started
     * yarn add bcryptjs ( Security random generation numbers )
     * yarn add jsonwebtoken ( token provider )
     * yarn add yup (Data validator )
+    * yarn add cors ( Allow to others applications access API) 
+
+
+* Sequelize
+    * Migrations
+        * yarn sequelize migration:create --name=create-users
+    
+    * Run migrations
+        * yarn sequelize db:migrate
+        * yarn sequelize db:migrate:undo:all

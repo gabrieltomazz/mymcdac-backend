@@ -1,5 +1,8 @@
 import * as Yup from 'yup';
+import jwt from 'jsonwebtoken';
+
 import User from '../models/User';
+import AuthConfig  from '../../config/auth';
 
 class UserController {
     async store(req, res) {
@@ -11,22 +14,29 @@ class UserController {
         });
 
         if(!(await schema.isValid(req.body))) {
-            return res.status(400).json({ error: 'Validation Fails !'});
+            return res.status(400).json({ error: { mensagem: 'Dados Inválidos!'} });
         }
 
         const userExists = await User.findOne({ where: { email: req.body.email } });
 
         if(userExists) {
-            return res.status(400).json({ error:' Usuário já Existe! '});
+            return res.status(400).json({ error: { mensagem: 'Usuário já Existe!'} });
         }
 
         const { id, name, email } = await User.create(req.body);
 
         return res.json({
-            id,
-            name,
-            email
+            user: {
+                id,
+                name, 
+                email,
+            },
+            token: jwt.sign( {id}, AuthConfig.secret, {
+                expiresIn: AuthConfig.expiresIn,
+            } ),
         });
+
+        
     }
     
     async update(req, res){
@@ -47,7 +57,7 @@ class UserController {
         });
 
         if(!(await schema.isValid (req.body))) {
-            return res.status(400).json({ error: 'Dados invalidos!'});
+            return res.status(400).json({ error: { mensagem: 'Dados invalidos!'} });
         }
 
         const {email , oldPassword} = req.body;
@@ -58,12 +68,16 @@ class UserController {
             const emailExists = await User.findOne({ where: { email } });
             
             if (emailExists) {
-                return res.status(400).json({ error: 'Email já utilia '});
+                return res.status(400).json({ 
+                    error: { 
+                        email: 'Email já utiliazado '
+                    } 
+                });
             }
         }
 
         if(oldPassword && !(await user.checkPassword(oldPassword))) {
-            return res.status(401).json({Error: 'Password does not match '})
+            return res.status(401).json({ error: { password: 'Senhas não coincidem'} })
         }
         
          await user.update(req.body);

@@ -14,7 +14,7 @@ class SessionController {
         });
 
         if(!(await schema.isValid(req.body))) {
-            return res.status(400).json({ error: 'Validation Fails !'});
+            return res.status(400).json({ error: { mensagem: 'Dados Inválidos!'} });
         }
 
         const{email, password} =  req.body;
@@ -29,13 +29,13 @@ class SessionController {
             //     }
             // ]
         });
-        console.log(user);
+
         if(!user){
-            return res.status(401).json({ error: 'Usuário não existe '});
+            return res.status(401).json({ error: { mensagem: 'Usuário não existe!'} });
         }
 
         if(!(await user.checkPassword(password))){
-            return res.status(401).json({ error: 'Senha incorreta!' });
+            return res.status(401).json({ error: { password: 'Senha incorreta!'} });
         } 
 
         const { id, name } = user;
