@@ -91,6 +91,18 @@ class UserController {
         });
         
     }
+
+    async getUser(req, res) {
+        
+        const user = await User.findByPk(req.userId);
+    
+        if(!user) {
+            return res.status(400).json({ error: { mensagem: 'Usuário não existe!'} });
+        }
+
+        return res.json(user);
+    }
+
 }
 
 export default new UserController();

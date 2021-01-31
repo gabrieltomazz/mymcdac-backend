@@ -108,3 +108,6 @@ dist
 
 #yarn 
 yarn.lock
+
+#VsCode
+.vscode/
