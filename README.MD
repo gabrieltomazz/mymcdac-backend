@@ -24,6 +24,8 @@ Getting started
 * Sequelize
     * Migrations
         * yarn sequelize migration:create --name=create-users
+        * yarn sequelize migration:create --name=create-scales
+        * yarn sequelize migration:create --name=create-users-has-scales
     
     * Run migrations
         * yarn sequelize db:migrate

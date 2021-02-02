@@ -13,7 +13,7 @@ routes.post('/login', SessionController.store);
 
 routes.use(authMiddleware);
 
-routes.put('/user', UserController.update);
+routes.put('/profile', UserController.update);
 routes.get('/profile', UserController.getUser);
 
 
