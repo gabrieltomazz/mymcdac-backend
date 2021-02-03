@@ -1,6 +1,4 @@
 import Sequelize, { Model } from 'sequelize';
-import bcrypt from 'bcryptjs';
-
 
 class Scale extends Model {
 
@@ -17,6 +15,10 @@ class Scale extends Model {
         return this;
     }
 
+    static associate(models){
+        this.belongsTo(models.User, { foreignKey: 'user_id', as: 'user_id'});
+    };
+    
 }
 
 export default Scale;

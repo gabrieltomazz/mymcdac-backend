@@ -2,20 +2,31 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.createTable('users_has_scales', { 
-      user_id: {
+    return queryInterface.createTable('option_answers', { 
+      id: {
         type: Sequelize.INTEGER,
-        reference: {model: 'users', key: 'id'},
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
-        allowNull: true, 
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
       },
-      scales_id: {
+      answer: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      neutral: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+      },
+      good: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+      },
+      scale_id: {
         type: Sequelize.INTEGER,
         reference: {model: 'scales', key: 'id'},
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
-        allowNull: true, 
+        allowNull: false, 
       },
       created_at: {
         type: Sequelize.DATE,
@@ -30,6 +41,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('users_has_scales');
+    return queryInterface.dropTable('option_answers');
   }
 };
