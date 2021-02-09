@@ -6,7 +6,7 @@ export default async (req, res , next) => {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
-        res.status(401).json({ Erro: 'Token não enviado' });
+        return res.status(401).json({ Erro: 'Token não enviado' });
     }
 
     const [, token] = authHeader.split(' ');

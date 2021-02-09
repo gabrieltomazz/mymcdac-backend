@@ -27,4 +27,4 @@ class Project extends Model {
 
 }
 
-export default Scale;
+export default Project;
