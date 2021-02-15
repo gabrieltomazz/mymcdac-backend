@@ -5,6 +5,7 @@ import User from '../models/User';
 import AuthConfig  from '../../config/auth';
 
 class UserController {
+    
     async store(req, res) {
         // Fields Validation
         const schema = Yup.object().shape({

@@ -18,7 +18,7 @@ module.exports = {
         reference: {model: 'users', key: 'id'},
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
-        allowNull: true, 
+        allowNull: false, 
       },
       created_at: {
         type: Sequelize.DATE,

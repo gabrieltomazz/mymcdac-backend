@@ -18,7 +18,7 @@ class OptionAnswer extends Model {
     }
 
     static associate(models){
-        this.belongsTo(models.Scale, { foreignKey: 'scale_id', as: 'scale_id'});
+        this.belongsTo(models.Scale, { foreignKey: 'scale_id'});
     };
 
 }
