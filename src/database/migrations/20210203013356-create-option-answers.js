@@ -25,7 +25,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         reference: {model: 'scales', key: 'id'},
         onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+        onDelete: 'CASCADE',
         allowNull: false, 
       },
       created_at: {

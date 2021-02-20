@@ -18,6 +18,12 @@ routes.put('/profile', UserController.update);
 routes.get('/profile', UserController.getUser);
 
 routes.get('/scales', ScaleController.getScaleAll);
+routes.get('/scales/user', ScaleController.getScaleByUserId);
 routes.post('/scales', ScaleController.store);
+routes.put('/scales/:id', ScaleController.update);
+routes.delete('/scales/:id', ScaleController.delete);
+
+
+
 
 export default routes;
