@@ -155,7 +155,7 @@ class ScaleController {
         const scale_id = req.params.id;
 
         // verify if id is valid
-        if(isNaN(id_scale)){
+        if(isNaN(scale_id)){
             return res.status(400).json({ error: { mensagem: 'Scale id Inválido!'} });
         }
 
