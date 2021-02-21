@@ -17,7 +17,7 @@ class Scale extends Model {
 
     static associate(models){
         this.belongsTo(models.User, { foreignKey: 'user_id'});
-        this.hasMany(models.OptionAnswer, {as: 'optionAnswer'} );
+        this.hasMany(models.OptionAnswer, {as: 'optionAnswers'} );
     };
     
 }

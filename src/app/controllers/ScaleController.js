@@ -43,12 +43,12 @@ class ScaleController {
                 
                 // Persist options
                 await OptionAnswer.bulkCreate(optionsAnswers).then(() => {
-                    return Scale.findAll({
+                    return Scale.findOne({
                         where: { id: id },
                         attributes: ['id','description'],
                         include: {
                             model: OptionAnswer,
-                            as: 'optionAnswer',
+                            as: 'optionAnswers',
                             attributes: ['id','answer','neutral','good']
                         }
                     });
@@ -141,9 +141,13 @@ class ScaleController {
             attributes: ['id','description'],
             include: {
                 model: OptionAnswer,
-                as: 'optionAnswer',
-                attributes: ['id','answer','neutral','good']
-            } 
+                as: 'optionAnswers',
+                attributes: ['id','answer','neutral','good'],
+            } ,
+            /* TODO: Verificar se deve se fazer desse jeito msm
+             * So fiz isso pq as OptionsAnswers estavam na ordem errada
+            */
+            order: [[{model: OptionAnswer, as: 'optionAnswers' }, 'id', 'asc']]
         });
 
         return res.status(200).json(scale);
