@@ -81,9 +81,9 @@ class ScaleController {
         }
         
         const optionsAnswers = req.body;
-        const id_scale = req.params.id;
+        const scale_id = req.params.id;
 
-        if(isNaN(id_scale)){
+        if(isNaN(scale_id)){
             return res.status(400).json({ error: { mensagem: 'Scale id Inválido!'} });
         }
         
@@ -93,7 +93,7 @@ class ScaleController {
 
         try{
             // find scale
-            const scale = await Scale.findByPk(id_scale);
+            const scale = await Scale.findByPk(scale_id);
             
             // verify if scale is empty
             if(!scale){
@@ -116,8 +116,18 @@ class ScaleController {
                     return res.status(400).json(error);
                 }
             }
+            
+            const scales = await Scale.findOne({
+                where: { id: scale_id },
+                attributes: ['id','description'],
+                include: {
+                    model: OptionAnswer,
+                    as: 'optionAnswers',
+                    attributes: ['id','answer','neutral','good']
+                }
+            });
 
-            return res.status(200).json({ success: { mensagem: 'Atualizado com Sucesso!'} });
+            return res.status(200).json(scales); 
 
         }catch (error){
             return res.status(400).json({ error: { mensagem: 'Erro ao atualizar Scale!'} });
@@ -144,9 +154,6 @@ class ScaleController {
                 as: 'optionAnswers',
                 attributes: ['id','answer','neutral','good'],
             } ,
-            /* TODO: Verificar se deve se fazer desse jeito msm
-             * So fiz isso pq as OptionsAnswers estavam na ordem errada
-            */
             order: [[{model: OptionAnswer, as: 'optionAnswers' }, 'id', 'asc']]
         });
 

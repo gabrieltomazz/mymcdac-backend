@@ -4,6 +4,7 @@ import User from './app/models/User';
 import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import ScaleController from './app/controllers/ScaleController';
+import ProjectController from './app/controllers/ProjectController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -23,7 +24,9 @@ routes.post('/scales', ScaleController.store);
 routes.put('/scales/:id', ScaleController.update);
 routes.delete('/scales/:id', ScaleController.delete);
 
-
-
+routes.post('/project', ProjectController.store);
+routes.put('/project', ProjectController.update);
+routes.get('/project/user', ProjectController.getProjectById);
+routes.delete('/project/:id', ProjectController.delete);
 
 export default routes;

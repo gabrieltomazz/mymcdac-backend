@@ -19,6 +19,7 @@ Getting started
     * yarn add jsonwebtoken ( token provider )
     * yarn add yup (Data validator )
     * yarn add cors ( Allow to others applications access API) 
+    * yarn add snakecase-keys (Convert CamelCase to snake_case) 
 
 
 * Sequelize
