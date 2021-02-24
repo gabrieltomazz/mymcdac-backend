@@ -9,18 +9,21 @@ class ProjectController {
 
         // Fields Validation
         const schema = Yup.object().shape({
-            projectGoal: Yup.string().required(),
-            projectLocus: Yup.string().required(),
+            project_goal: Yup.string().required(),
+            project_locus: Yup.string().required(),
             performance: Yup.string().required(),
             steps: Yup.number().required(),
-            startDate: Yup.date().required(),
-            endDate: Yup.date().required(),
-            scaleId: Yup.number().required(),
+            start_date: Yup.date().required(),
+            end_date: Yup.date().required(),
+            scale_id: Yup.number().required(),
         });
 
-        if(!(await schema.isValid(req.body))) {
-            return res.status(400).json({ error: { mensagem: 'Dados Inválidos!'} });
+        try {
+            await schema.validate(req.body, { abortEarly: false })
+        } catch (error) {
+            return res.status(400).json(error);
         }
+        
 
         // convert Json to snake case
         const project = snakeCaseKeys(req.body);
@@ -32,8 +35,8 @@ class ProjectController {
             
             return res.status(200).json({ 
                 id,
-                projectGoal: project_goal,
-                projectLocus: project_locus
+                project_goal,
+                project_locus
             });
         }catch (error){
             return res.status(400).json({ error: { mensagem: 'Erro! Falha ao salvar projeto.'} });
@@ -45,13 +48,13 @@ class ProjectController {
         // Fields Validation
         const schema = Yup.object().shape({
             id: Yup.number().required(),
-            projectGoal: Yup.string(),
-            projectLocus: Yup.string(),
+            project_goal: Yup.string(),
+            project_locus: Yup.string(),
             performance: Yup.string(),
             steps: Yup.number(),
-            startDate: Yup.date(),
-            endDate: Yup.date(),
-            scaleId: Yup.number(),
+            start_date: Yup.date(),
+            end_date: Yup.date(),
+            scale_id: Yup.number(),
         });
 
         if(!(await schema.isValid(req.body))) {
@@ -75,8 +78,8 @@ class ProjectController {
             
             return res.status(200).json({ 
                 id,
-                projectGoal: project_goal,
-                projectLocus: project_locus
+                project_goal,
+                project_locus
             });
         }catch (error){
             return res.status(400).json({ error: { mensagem: 'Erro! Falha ao atualizar projeto.'} });
