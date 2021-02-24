@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
-import snakeCaseKeys from 'snakecase-keys';
 
 import Project from '../models/Project';
+import Scale from '../models/Scale';
 
 class ProjectController {
 
@@ -24,9 +24,7 @@ class ProjectController {
             return res.status(400).json(error);
         }
         
-
-        // convert Json to snake case
-        const project = snakeCaseKeys(req.body);
+        const project = req.body;
         project.user_id = req.userId;
 
         //create project
@@ -57,13 +55,15 @@ class ProjectController {
             scale_id: Yup.number(),
         });
 
-        if(!(await schema.isValid(req.body))) {
-            return res.status(400).json({ error: { mensagem: 'Dados Inválidos!'} });
+        try {
+            await schema.validate(req.body, { abortEarly: false })
+        } catch (error) {
+            return res.status(400).json(error);
         }
 
         //update project
         try {
-            const project = snakeCaseKeys(req.body);
+            const project = req.body;
 
             // find project
             const projects = await Project.findByPk(project.id);
@@ -87,13 +87,45 @@ class ProjectController {
 
     }
 
-    async getProjectById(req, res) {
+    async getProjectByUserId(req, res) {
 
         try{
             // user_id extracted from token 
             const projects = await Project.findAll({
                 where: { user_id: req.userId },
+                include: {
+                    model: Scale,
+                    as: 'scale',
+                    attributes: ['id','description']
+                },
                 order: ['id']
+            });
+
+            return res.status(200).json(projects);
+
+        }catch(error) {
+            return res.status(200).json({ error: { mensagem: 'Falha ao consultar projeto!'} });
+        }        
+    }
+
+    async getProjectById(req, res) {
+
+        const project_id = req.params.id;
+
+        // verify if id is valid
+        if(isNaN(project_id)){
+            return res.status(400).json({ error: { mensagem: 'Project id Inválido!'} });
+        }
+
+        try{
+            // user_id extracted from token 
+            const projects = await Project.findOne({
+                where: { id: project_id },
+                include: {
+                    model: Scale,
+                    as: 'scale',
+                    attributes: ['id','description']
+                }
             });
 
             return res.status(200).json(projects);

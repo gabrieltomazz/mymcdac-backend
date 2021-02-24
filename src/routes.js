@@ -26,7 +26,8 @@ routes.delete('/scales/:id', ScaleController.delete);
 
 routes.post('/projects', ProjectController.store);
 routes.put('/projects', ProjectController.update);
-routes.get('/projects/user', ProjectController.getProjectById);
+routes.get('/projects/user', ProjectController.getProjectByUserId);
+routes.get('/projects/:id', ProjectController.getProjectById);
 routes.delete('/projects/:id', ProjectController.delete);
 
 export default routes;
