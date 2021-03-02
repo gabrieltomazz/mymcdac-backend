@@ -7,6 +7,7 @@ import ScaleController from './app/controllers/ScaleController';
 import ProjectController from './app/controllers/ProjectController';
 
 import authMiddleware from './app/middlewares/auth';
+import CriteriaController from './app/controllers/CriteriaController';
 
 const routes = new Router();
 
@@ -29,5 +30,7 @@ routes.put('/projects', ProjectController.update);
 routes.get('/projects/user', ProjectController.getProjectByUserId);
 routes.get('/projects/:id', ProjectController.getProjectById);
 routes.delete('/projects/:id', ProjectController.delete);
+
+routes.post('/criteria', CriteriaController.store);
 
 export default routes;

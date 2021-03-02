@@ -6,8 +6,9 @@ import User from '../app/models/User';
 import Scale from '../app/models/Scale';
 import OptionAnswer from '../app/models/OptionAnswer';
 import Project from '../app/models/Project';
+import Criteria from '../app/models/Criteria';
 
-const models = [User, Scale, OptionAnswer, Project]
+const models = [User, Scale, OptionAnswer, Project, Criteria]
 
 class Database {
     constructor(){
