@@ -31,6 +31,7 @@ routes.get('/projects/user', ProjectController.getProjectByUserId);
 routes.get('/projects/:id', ProjectController.getProjectById);
 routes.delete('/projects/:id', ProjectController.delete);
 
-routes.post('/criteria', CriteriaController.store);
+routes.post('/projects/:id/criteria', CriteriaController.store);
+routes.get('/projects/:id/criteria', CriteriaController.getCriteriaByProjectId);
 
 export default routes;

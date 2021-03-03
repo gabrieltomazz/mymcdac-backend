@@ -10,7 +10,6 @@ class CriteriaController {
         const schema = Yup.object().shape({
             name: Yup.string().required(),
             criteria_id: Yup.number(),
-            project_id: Yup.number().required(),
         });
 
         try {
@@ -20,6 +19,7 @@ class CriteriaController {
         }
 
         const criterion = req.body;
+        criterion.project_id = req.params.id;
         
         //create criterion
         try {
@@ -37,6 +37,37 @@ class CriteriaController {
 
     }
 
+    async getCriteriaByProjectId(req, res) {
+
+        const project_id = req.params.id;
+
+        // verify if id is valid
+        if(isNaN(project_id)){
+            return res.status(400).json({ error: { mensagem: 'Project id Inválido!'} });
+        }
+
+        try {
+            const listCriteria = await Criteria.findAll({
+                where : {project_id, criteria_id: null },
+                include: {
+                    model: Criteria,
+                    as: 'criterian',
+                    attributes: ['id','name','criteria_id'],
+                    include: {
+                        model: Criteria,
+                        as: 'criterian',
+                        attributes: ['id','name','criteria_id'],
+                    }
+                }
+            });
+
+            return res.status(200).json(listCriteria);
+            
+        } catch (error) {
+            return res.status(400).json({ error: { mensagem: 'Erro! Falha ao buscar critério!'} });
+        }
+
+    }
 
 }
 
