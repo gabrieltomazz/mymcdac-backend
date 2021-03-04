@@ -25,7 +25,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      criteria_id: {
+      criterion_id: {
         type: Sequelize.INTEGER,
         reference: {model: 'criteria', key: 'id'},
         onUpdate: 'CASCADE',
