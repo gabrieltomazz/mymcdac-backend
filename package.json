@@ -22,6 +22,7 @@
     "nodemon": "^2.0.2",
     "sequelize": "^6.4.0",
     "sequelize-cli": "^6.2.0",
+    "sequelize-hierarchy": "^2.0.4",
     "snakecase-keys": "^3.2.1",
     "sucrase": "^3.13.0",
     "yup": "^0.32.8"
