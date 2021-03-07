@@ -4,7 +4,8 @@
   "description": "Multicriteria Aid Decesion Software API",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon src/server.js "
+    "dev": "nodemon src/server.js",
+    "lint:fix": "eslint --fix --ext .js,.jsx ."
   },
   "author": "Gabriel Tomaz & Christian Luis",
   "license": "MIT",
@@ -14,7 +15,6 @@
     "camelcase-keys": "^6.2.2",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "eslint": "^7.17.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.2.5",
@@ -26,5 +26,21 @@
     "snakecase-keys": "^3.2.1",
     "sucrase": "^3.13.0",
     "yup": "^0.32.8"
+  },
+  "devDependencies": {
+    "eslint": "^7.21.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "husky": "=4",
+    "lint-staged": ">=10"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx}": "eslint --fix"
   }
 }
