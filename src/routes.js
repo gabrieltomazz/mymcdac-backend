@@ -32,5 +32,7 @@ routes.delete('/projects/:id', ProjectController.delete);
 
 routes.post('/projects/:id/criteria', CriteriaController.store);
 routes.get('/projects/:id/criteria', CriteriaController.getCriteriaByProjectId);
+routes.put('/projects/:id/criteria/:criterion_id', CriteriaController.update);
+routes.delete('/projects/:id/criteria/:criterion_id', CriteriaController.delete);
 
 export default routes;
