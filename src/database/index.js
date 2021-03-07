@@ -11,17 +11,17 @@ import Criteria from '../app/models/Criteria';
 const models = [User, Scale, OptionAnswer, Project, Criteria];
 
 class Database {
-  constructor() {
-    this.init();
-  }
+    constructor() {
+        this.init();
+    }
 
-  init() {
-    this.connecion = new Sequelize(databaseConfig);
+    init() {
+        this.connecion = new Sequelize(databaseConfig);
 
-    models
-      .map((model) => model.init(this.connecion))
-      .map((model) => model.associate && model.associate(this.connecion.models));
-  }
+        models
+            .map((model) => model.init(this.connecion))
+            .map((model) => model.associate && model.associate(this.connecion.models));
+    }
 }
 
 export default new Database();
