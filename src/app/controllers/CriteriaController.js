@@ -140,8 +140,6 @@ class CriteriaController {
                 where: { project_id, '$children.criterion_id$': null },
             });
 
-            // const result = await Util.listToTree(listCriteria);
-
             return res.status(200).json(listCriteria);
         } catch (error) {
             return res.status(400).json({ error: { mensagem: error } });
