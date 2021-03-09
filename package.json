@@ -5,7 +5,9 @@
   "main": "app.js",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "lint:fix": "eslint --fix --ext .js,.jsx ."
+    "lint:fix": "eslint --fix --ext .js,.jsx .",
+    "db:migrate": "sequelize db:migrate",
+    "db:down": "sequelize db:migrate:undo:all"
   },
   "author": "Gabriel Tomaz & Christian Luis",
   "license": "MIT",
