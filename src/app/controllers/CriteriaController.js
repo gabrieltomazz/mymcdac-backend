@@ -30,6 +30,7 @@ class CriteriaController {
                 name,
                 criterion_id,
                 project_id,
+                children: [],
             });
         } catch (error) {
             return res.status(400).json({ error: { mensagem: 'Erro! Falha ao salvar critério.' } });
