@@ -41,6 +41,7 @@ class CriteriaController {
         const schema = Yup.object().shape({
             id: Yup.number().required(),
             name: Yup.string().required(),
+            title: Yup.string(),
         });
 
         try {
@@ -60,8 +61,40 @@ class CriteriaController {
 
         try {
             const criterionResult = await Criteria.findByPk(id_criterion);
-            const { id, name } = await criterionResult.update(criterion);
-            return res.status(200).json({ id, name });
+            const { id, name, title } = await criterionResult.update(criterion);
+            return res.status(200).json({ id, name, title });
+        } catch (error) {
+            return res.status(400).json({ error: { mensagem: error } });
+        }
+    }
+
+    async updateCriteria(req, res) {
+        const schema = Yup.object().shape({
+            id: Yup.number(),
+            name: Yup.string(),
+            title: Yup.string(),
+            percent: Yup.number(),
+        });
+
+        try {
+            await schema.validate(req.body, { abortEarly: false });
+        } catch (error) {
+            return res.status(400).json(error);
+        }
+
+        const project_id = req.params.id;
+        const id_criterion = req.params.criterion_id;
+        const criterion = req.body;
+
+        // verify if id is valid
+        if (Number.isNaN(project_id) || Number.isNaN(id_criterion)) {
+            return res.status(400).json({ error: { mensagem: 'Ids Inválidos!' } });
+        }
+
+        try {
+            const criterionResult = await Criteria.findByPk(id_criterion);
+            await criterionResult.update(criterion);
+            return res.status(200).json('Ok!');
         } catch (error) {
             return res.status(400).json({ error: { mensagem: error } });
         }
@@ -84,6 +117,32 @@ class CriteriaController {
             const result = await Util.listToTree(listCriteria);
 
             return res.status(200).json(result);
+        } catch (error) {
+            return res.status(400).json({ error: { mensagem: error } });
+        }
+    }
+
+    async getCriteriaLefs(req, res) {
+        const project_id = req.params.id;
+
+        // verify if id is valid
+        if (Number.isNaN(project_id)) {
+            return res.status(400).json({ error: { mensagem: 'Project id Inválido!' } });
+        }
+
+        try {
+            const listCriteria = await Criteria.findAll({
+                include: {
+                    model: Criteria,
+                    as: 'children',
+                    attributes: [],
+                },
+                where: { project_id, '$children.criterion_id$': null },
+            });
+
+            // const result = await Util.listToTree(listCriteria);
+
+            return res.status(200).json(listCriteria);
         } catch (error) {
             return res.status(400).json({ error: { mensagem: error } });
         }
