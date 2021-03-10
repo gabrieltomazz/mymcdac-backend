@@ -77,6 +77,7 @@ class CriteriaController {
                 name: Yup.string(),
                 title: Yup.string(),
                 percent: Yup.number(),
+                order: Yup.number(),
             }),
         );
 
@@ -150,6 +151,38 @@ class CriteriaController {
             });
 
             return res.status(200).json(listCriteria);
+        } catch (error) {
+            return res.status(400).json({ error: { mensagem: error } });
+        }
+    }
+
+    async getCriteriaContributionRates(req, res) {
+        const project_id = req.params.id;
+
+        // verify if id is valid
+        if (Number.isNaN(project_id)) {
+            return res.status(400).json({ error: { mensagem: 'Project id Inválido!' } });
+        }
+
+        try {
+            const listCriteria = await Criteria.findAll({
+                include: {
+                    model: Criteria,
+                    as: 'children',
+                    attributes: ['id', 'name', 'percent'],
+                    group: ['$criteria.criterion_id$'],
+                },
+                attributes: ['id', 'name'],
+                order: ['id'],
+                where: { project_id },
+            });
+            const mainCriteria = await Criteria.findAll({
+                where: { project_id, criterion_id: null },
+                attributes: ['id', 'name', 'percent'],
+            });
+
+            // '$children.criterion_id$': null
+            return res.status(200).json({ mainCriteria, listCriteria });
         } catch (error) {
             return res.status(400).json({ error: { mensagem: error } });
         }

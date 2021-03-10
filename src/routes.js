@@ -33,6 +33,7 @@ routes.delete('/projects/:id', ProjectController.delete);
 routes.post('/projects/:id/criteria', CriteriaController.store);
 routes.get('/projects/:id/criteria', CriteriaController.getCriteriaByProjectId);
 routes.get('/projects/:id/criteria/leafs', CriteriaController.getCriteriaLefs);
+routes.get('/projects/:id/criteria/contribution-rates', CriteriaController.getCriteriaContributionRates);
 routes.put('/projects/:id/criteria/:criterion_id', CriteriaController.update);
 routes.patch('/projects/:id/criteria/:criterion_id', CriteriaController.updateCriteria);
 routes.delete('/projects/:id/criteria/:criterion_id', CriteriaController.delete);

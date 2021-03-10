@@ -8,6 +8,7 @@ class Criteria extends Model {
                 title: Sequelize.STRING,
                 percent: Sequelize.INTEGER,
                 sequence: Sequelize.STRING,
+                order: Sequelize.INTEGER,
             },
             {
                 sequelize,

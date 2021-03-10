@@ -22,6 +22,10 @@ module.exports = {
             type: Sequelize.STRING,
             allowNull: true,
         },
+        order: {
+            type: Sequelize.INTEGER,
+            allowNull: true,
+        },
         criterion_id: {
             type: Sequelize.INTEGER,
             reference: { model: 'criteria', key: 'id' },
