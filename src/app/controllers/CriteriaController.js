@@ -70,12 +70,15 @@ class CriteriaController {
     }
 
     async updateCriteria(req, res) {
-        const schema = Yup.object().shape({
-            id: Yup.number(),
-            name: Yup.string(),
-            title: Yup.string(),
-            percent: Yup.number(),
-        });
+        // Fields Validation
+        const schema = Yup.array().of(
+            Yup.object().shape({
+                id: Yup.number(),
+                name: Yup.string(),
+                title: Yup.string(),
+                percent: Yup.number(),
+            }),
+        );
 
         try {
             await schema.validate(req.body, { abortEarly: false });
@@ -85,20 +88,25 @@ class CriteriaController {
 
         const project_id = req.params.id;
         const id_criterion = req.params.criterion_id;
-        const criterion = req.body;
+        const criteriaList = req.body;
 
         // verify if id is valid
         if (Number.isNaN(project_id) || Number.isNaN(id_criterion)) {
             return res.status(400).json({ error: { mensagem: 'Ids Inválidos!' } });
         }
 
-        try {
-            const criterionResult = await Criteria.findByPk(id_criterion);
-            await criterionResult.update(criterion);
-            return res.status(200).json('Ok!');
-        } catch (error) {
-            return res.status(400).json({ error: { mensagem: error } });
-        }
+        // update criterion
+        criteriaList.forEach(async (element) => {
+            const criterion = await Criteria.findByPk(element.id);
+            try {
+                await criterion.update(element);
+                return true;
+            } catch (error) {
+                return res.status(400).json({ error: { mensagem: error } });
+            }
+        });
+
+        return res.status(200).json('ok!');
     }
 
     async getCriteriaByProjectId(req, res) {
