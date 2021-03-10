@@ -147,6 +147,7 @@ class CriteriaController {
                     attributes: [],
                 },
                 where: { project_id, '$children.criterion_id$': null },
+                order: ['order'],
             });
 
             return res.status(200).json(listCriteria);
