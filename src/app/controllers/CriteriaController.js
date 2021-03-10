@@ -88,11 +88,10 @@ class CriteriaController {
         }
 
         const project_id = req.params.id;
-        const id_criterion = req.params.criterion_id;
         const criteriaList = req.body;
 
         // verify if id is valid
-        if (Number.isNaN(project_id) || Number.isNaN(id_criterion)) {
+        if (Number.isNaN(project_id)) {
             return res.status(400).json({ error: { mensagem: 'Ids Inválidos!' } });
         }
 
