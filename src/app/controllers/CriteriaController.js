@@ -168,11 +168,12 @@ class CriteriaController {
             const listCriteria = await Criteria.findAll({
                 include: {
                     model: Criteria,
+                    required: true,
                     as: 'children',
                     attributes: ['id', 'name', 'percent'],
                     group: ['$criteria.criterion_id$'],
                 },
-                attributes: ['id', 'name'],
+                attributes: [['name', 'title']],
                 order: ['id'],
                 where: { project_id },
             });
@@ -181,8 +182,13 @@ class CriteriaController {
                 attributes: ['id', 'name', 'percent'],
             });
 
+            listCriteria.unshift({
+                title: 'Critérios Principais',
+                children: mainCriteria,
+            });
+
             // '$children.criterion_id$': null
-            return res.status(200).json({ mainCriteria, listCriteria });
+            return res.status(200).json(listCriteria);
         } catch (error) {
             return res.status(400).json({ error: { mensagem: error } });
         }
