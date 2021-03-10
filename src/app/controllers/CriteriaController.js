@@ -22,12 +22,13 @@ class CriteriaController {
         // create criterion
         try {
             const {
-                id, name, criterion_id, project_id,
+                id, name, title, criterion_id, project_id,
             } = await Criteria.create(criterion);
 
             return res.status(200).json({
                 id,
                 name,
+                title,
                 criterion_id,
                 project_id,
                 children: [],
