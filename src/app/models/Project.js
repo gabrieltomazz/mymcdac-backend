@@ -5,7 +5,6 @@ class Project extends Model {
         super.init(
             {
                 project_goal: Sequelize.STRING,
-                project_locus: Sequelize.STRING,
                 performance: Sequelize.STRING,
                 steps: Sequelize.INTEGER,
                 start_date: Sequelize.DATE,

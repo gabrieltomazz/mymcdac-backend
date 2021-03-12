@@ -8,7 +8,6 @@ class ProjectController {
         // Fields Validation
         const schema = Yup.object().shape({
             project_goal: Yup.string().required(),
-            project_locus: Yup.string().required(),
             performance: Yup.string().required(),
             steps: Yup.number().required(),
             start_date: Yup.date().required(),
@@ -27,12 +26,11 @@ class ProjectController {
 
         // create project
         try {
-            const { id, project_goal, project_locus } = await Project.create(project);
+            const { id, project_goal } = await Project.create(project);
 
             return res.status(200).json({
                 id,
                 project_goal,
-                project_locus,
             });
         } catch (error) {
             return res.status(400).json({ error: { mensagem: 'Erro! Falha ao salvar projeto.' } });
@@ -44,7 +42,6 @@ class ProjectController {
         const schema = Yup.object().shape({
             id: Yup.number().required(),
             project_goal: Yup.string(),
-            project_locus: Yup.string(),
             performance: Yup.string(),
             steps: Yup.number(),
             start_date: Yup.date(),
@@ -71,12 +68,11 @@ class ProjectController {
             }
 
             // update project
-            const { id, project_goal, project_locus } = await projects.update(project);
+            const { id, project_goal } = await projects.update(project);
 
             return res.status(200).json({
                 id,
                 project_goal,
-                project_locus,
             });
         } catch (error) {
             return res.status(400).json({ error: { mensagem: 'Erro! Falha ao atualizar projeto.' } });

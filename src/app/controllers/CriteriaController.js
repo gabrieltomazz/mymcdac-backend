@@ -44,6 +44,8 @@ class CriteriaController {
             id: Yup.number().required(),
             name: Yup.string().required(),
             title: Yup.string(),
+            percent: Yup.string(),
+            order: Yup.number(),
         });
 
         try {

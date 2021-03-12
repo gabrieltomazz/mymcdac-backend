@@ -10,10 +10,6 @@ module.exports = {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        project_locus: {
-            type: Sequelize.STRING,
-            allowNull: false,
-        },
         performance: {
             type: Sequelize.STRING,
             allowNull: false,
