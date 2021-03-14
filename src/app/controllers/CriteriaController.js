@@ -7,6 +7,8 @@ class CriteriaController {
     async store(req, res) {
         const schema = Yup.object().shape({
             name: Yup.string().required(),
+            title: Yup.string(),
+            percent: Yup.number(),
             criterion_id: Yup.number(),
         });
 
@@ -22,13 +24,14 @@ class CriteriaController {
         // create criterion
         try {
             const {
-                id, name, title, criterion_id, project_id,
+                id, name, title, percent, criterion_id, project_id,
             } = await Criteria.create(criterion);
 
             return res.status(200).json({
                 id,
                 name,
                 title,
+                percent,
                 criterion_id,
                 project_id,
                 children: [],

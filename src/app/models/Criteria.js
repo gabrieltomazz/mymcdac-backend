@@ -20,7 +20,7 @@ class Criteria extends Model {
 
     static associate(models) {
         this.belongsTo(models.Project, { foreignKey: 'project_id' });
-        this.hasMany(models.Criteria, { foreignKey: 'criterion_id', as: 'children' });
+        this.hasMany(models.Criteria, { foreignKey: 'criterion_id', as: 'children', onDelete: 'CASCADE' });
     }
 }
 
