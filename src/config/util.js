@@ -20,5 +20,9 @@ class Util {
 
         return roots;
     }
+
+    async calculateLeafTree(listCriteria) {
+        return listCriteria;
+    }
 }
 export default new Util();

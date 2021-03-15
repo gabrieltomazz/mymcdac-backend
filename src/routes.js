@@ -7,6 +7,7 @@ import ProjectController from './app/controllers/ProjectController';
 
 import authMiddleware from './app/middlewares/auth';
 import CriteriaController from './app/controllers/CriteriaController';
+import ScaleResultController from './app/controllers/ScaleResultController';
 
 const routes = new Router();
 
@@ -37,5 +38,7 @@ routes.get('/projects/:id/criteria/contribution-rates', CriteriaController.getCr
 routes.put('/projects/:id/criteria/:criterion_id', CriteriaController.update);
 routes.patch('/projects/:id/criteria', CriteriaController.updateCriteria);
 routes.delete('/projects/:id/criteria/:criterion_id', CriteriaController.delete);
+
+routes.get('/projects/:id/criteria/median-scale', ScaleResultController.getMedianScale);
 
 export default routes;
