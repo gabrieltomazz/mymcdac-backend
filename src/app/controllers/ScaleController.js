@@ -95,17 +95,6 @@ class ScaleController {
                 description,
             });
 
-            // for (const i in optionsAnswers) {
-            //   // find Option
-            //   const options = await OptionAnswer.findByPk(optionsAnswers[i].id);
-
-            //   try {
-            //     // update options
-            //     await options.update(optionsAnswers[i]);
-            //   } catch (error) {
-            //     return res.status(400).json(error);
-            //   }
-            // }
             optionsAnswers.forEach(async (element) => {
                 const options = await OptionAnswer.findByPk(element.id);
                 try {
@@ -163,16 +152,6 @@ class ScaleController {
         if (Number.isNaN(scale_id)) {
             return res.status(400).json({ error: { mensagem: 'Scale id Inválido!' } });
         }
-
-        // const projectScale = Project.findAll({
-        //     where: {
-        //         scale_id: scale_id
-        //     }
-        // });
-
-        // if(projectScale){
-        //     return res.status(400).json({ error: { mensagem: 'Scale!'} });
-        // }
 
         try {
             // delete scale
