@@ -112,7 +112,7 @@ class CriteriaController {
             }
         });
 
-        return res.status(200).json('ok!');
+        return res.status(200).json('Salvo com Sucesso!');
     }
 
     async getCriteriaByProjectId(req, res) {

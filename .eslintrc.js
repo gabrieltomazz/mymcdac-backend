@@ -17,5 +17,6 @@ module.exports = {
         indent: ['error', 4],
         'no-tabs': 'off',
         'max-len': 'off',
+        'no-await-in-loop': 'off',
     },
 };
