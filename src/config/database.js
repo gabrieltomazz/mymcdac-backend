@@ -12,5 +12,6 @@ module.exports = {
         underscoredAll: true,
         foreignKeyConstraint: true,
     },
+    logQueryParameters: true,
 
 };

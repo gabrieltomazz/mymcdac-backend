@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 
+import { Op } from 'sequelize';
 import Criteria from '../models/Criteria';
 import util from '../../config/util';
 import OptionAnswer from '../models/OptionAnswer';
@@ -68,10 +69,7 @@ class ScaleResultController {
     async update(req, res) {
         // Fields Validation
         const schema = Yup.array().of(
-            Yup.object().shape({
-                id: Yup.number().required(),
-                median: Yup.boolean().required(),
-            }),
+            Yup.number().required(),
         );
 
         if (!(await schema.isValid(req.body))) {
@@ -80,16 +78,22 @@ class ScaleResultController {
 
         const scaleResults = req.body;
 
-        // update criterion
-        await scaleResults.forEach(async (element) => {
-            const option = await ScaleResult.findByPk(element.id);
-            try {
-                await option.update(element);
-                return true;
-            } catch (error) {
-                return res.status(400).json({ error: { mensagem: error } });
-            }
+        const scalesToBeTrue = await ScaleResult.findAll({
+            where: { id: scaleResults },
+            raw: true,
         });
+
+        await ScaleResult.update(
+            { median: true },
+            { where: { id: scaleResults } },
+        );
+
+        const criterionIds = scalesToBeTrue.map((scale) => scale.criterion_id);
+
+        await ScaleResult.update(
+            { median: false },
+            { where: { criterion_id: criterionIds, id: { [Op.notIn]: scaleResults } } },
+        );
 
         return res.status(200).json('Salvo com Sucesso!');
     }
