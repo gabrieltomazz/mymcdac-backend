@@ -94,15 +94,16 @@ class Util {
     }
 
     async buildFinalResult(criteriaList, options) {
-        // criteriaList = JSON.parse(JSON.stringify(criteriaList));
         options = JSON.parse(JSON.stringify(options));
         for (let i = 0; i < criteriaList.length; i += 1) {
+            // insert option in criterion
             criteriaList[i].options = JSON.parse(JSON.stringify(options));
             // initialize performance
             criteriaList[i].performanceMin = null;
             criteriaList[i].performanceMedia = null;
             criteriaList[i].performanceMax = null;
 
+            // find resultScale and insert in criterion
             for (let j = 0; j < criteriaList[i].options.length; j += 1) {
                 const result = await ScaleResult.findOne({
                     where: { option_answer_id: criteriaList[i].options[j].id, criterion_id: criteriaList[i].id },
@@ -121,9 +122,21 @@ class Util {
         criteriaList = this.listToTree(criteriaList);
         const generalCriteriaResult = this.calculaFinalResult(criteriaList, options);
 
-        criteriaList.push(generalCriteriaResult);
+        const mainCriteria = criteriaList.map((criterion) => ({
+            name: criterion.name, title: criterion.title, performanceMax: criterion.performanceMax, performanceMedia: criterion.performanceMedia, performanceMin: criterion.performanceMin,
+        }));
 
-        return criteriaList;
+        generalCriteriaResult.mainCriteria = mainCriteria;
+
+        const finalResult = {
+            leafs: null,
+            mainCriteria: null,
+            gerenalCriteria: null,
+        };
+
+        finalResult.mainCriteria = criteriaList;
+        finalResult.gerenalCriteria = generalCriteriaResult;
+        return finalResult;
     }
 
     calculaFinalResult(criteriaList, options) {
