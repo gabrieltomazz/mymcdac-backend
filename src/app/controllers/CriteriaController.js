@@ -129,7 +129,7 @@ class CriteriaController {
                 raw: true,
             });
 
-            const result = await Util.listToTree(listCriteria);
+            const result = Util.listToTree(listCriteria);
 
             return res.status(200).json(result);
         } catch (error) {

@@ -41,5 +41,6 @@ routes.delete('/projects/:id/criteria/:criterion_id', CriteriaController.delete)
 
 routes.get('/projects/:id/criteria/modes', ScaleResultController.getMedianScale);
 routes.patch('/projects/:id/criteria/modes', ScaleResultController.update);
+routes.get('/projects/:id/criteria/final-result', ScaleResultController.getFinalResult);
 
 export default routes;

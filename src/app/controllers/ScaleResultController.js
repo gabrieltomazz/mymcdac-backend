@@ -97,6 +97,34 @@ class ScaleResultController {
 
         return res.status(200).json('Salvo com Sucesso!');
     }
+
+    async getFinalResult(req, res) {
+        const project_id = req.params.id;
+
+        // verify if id is valid
+        if (Number.isNaN(project_id)) {
+            return res.status(400).json({ error: { mensagem: 'Project id Inválido!' } });
+        }
+
+        const listCriteria = await Criteria.findAll({
+            where: { project_id },
+            raw: true,
+        });
+
+        // find project
+        const project = await Project.findByPk(project_id);
+
+        const options = await OptionAnswer.findAll({
+            where: { scale_id: project.scale_id },
+            attributes: ['id', 'answer', 'neutral', 'good'],
+            order: ['id'],
+            raw: true,
+        });
+
+        const result = await util.buildFinalResult(listCriteria, options);
+
+        return res.status(200).json(result);
+    }
 }
 
 export default new ScaleResultController();

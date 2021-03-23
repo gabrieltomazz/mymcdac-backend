@@ -1,7 +1,9 @@
+import ScaleResult from '../app/models/ScaleResult';
+
 let listCriteria = [];
 
 class Util {
-    async listToTree(list) {
+    listToTree(list) {
         const map = [];
         const roots = [];
         let i;
@@ -89,6 +91,75 @@ class Util {
             x += 1;
             factorMult += 1;
         }
+    }
+
+    async buildFinalResult(criteriaList, options) {
+        // criteriaList = JSON.parse(JSON.stringify(criteriaList));
+        options = JSON.parse(JSON.stringify(options));
+        for (let i = 0; i < criteriaList.length; i += 1) {
+            criteriaList[i].options = JSON.parse(JSON.stringify(options));
+            // initialize performance
+            criteriaList[i].performanceMin = null;
+            criteriaList[i].performanceMedia = null;
+            criteriaList[i].performanceMax = null;
+
+            for (let j = 0; j < criteriaList[i].options.length; j += 1) {
+                const result = await ScaleResult.findOne({
+                    where: { option_answer_id: criteriaList[i].options[j].id, criterion_id: criteriaList[i].id },
+                    attributes: ['id', 'value', 'median'],
+                });
+                criteriaList[i].options[j].value = result ? result.value : 0;
+                criteriaList[i].options[j].median = result ? result.median : false;
+                criteriaList[i].options[j].id_scale_result = result ? result.id : null;
+
+                if (result && j === 0) criteriaList[i].performanceMin = result.value;
+                if (result && result.median === true) criteriaList[i].performanceMedia = result.value;
+                if (result && j === (criteriaList[i].options.length - 1)) criteriaList[i].performanceMax = result.value;
+            }
+        }
+
+        criteriaList = this.listToTree(criteriaList);
+        const generalCriteriaResult = this.calculaFinalResult(criteriaList, options);
+
+        criteriaList.push(generalCriteriaResult);
+
+        return criteriaList;
+    }
+
+    calculaFinalResult(criteriaList, options) {
+        for (let x = 0; x < criteriaList.length; x += 1) {
+            if (criteriaList[x].children.length > 0) {
+                const {
+                    finalOptions, performanceMax, performanceMedia, performanceMin,
+                } = this.calculaFinalResult(criteriaList[x].children, criteriaList[x].options);
+                criteriaList[x].options = finalOptions;
+                criteriaList[x].performanceMax = performanceMax;
+                criteriaList[x].performanceMedia = performanceMedia;
+                criteriaList[x].performanceMin = performanceMin;
+            }
+        }
+        return this.calculateScale(criteriaList.map((criterion) => ({
+            options: criterion.options, percent: criterion.percent, performanceMax: criterion.performanceMax, performanceMedia: criterion.performanceMedia, performanceMin: criterion.performanceMin,
+        })), options);
+    }
+
+    calculateScale(ListSons, options) {
+        const finalOptions = options;
+
+        for (let index = 0; index < finalOptions.length; index += 1) {
+            finalOptions[index].value = (ListSons.reduce((resultado, opt) => resultado + (opt.options[index].value * opt.percent), 0)) / 100;
+        }
+
+        const [performanceMax, performanceMedia, performanceMin] = ListSons.reduce((resultado, opt) => {
+            resultado[0] += Math.round((opt.performanceMax * opt.percent) / 100);
+            resultado[1] += Math.round((opt.performanceMedia * opt.percent) / 100);
+            resultado[2] += Math.round((opt.performanceMin * opt.percent) / 100);
+            return resultado;
+        }, [0, 0, 0]);
+
+        return {
+            finalOptions, performanceMax, performanceMedia, performanceMin,
+        };
     }
 }
 export default new Util();
