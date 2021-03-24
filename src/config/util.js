@@ -120,22 +120,22 @@ class Util {
         }
 
         criteriaList = this.listToTree(criteriaList);
-        const generalCriteriaResult = this.calculaFinalResult(criteriaList, options);
+        const {
+            finalOptions, performanceMax, performanceMedia, performanceMin,
+        } = this.calculaFinalResult(criteriaList, options);
 
         const mainCriteria = criteriaList.map((criterion) => ({
             name: criterion.name, title: criterion.title, performanceMax: criterion.performanceMax, performanceMedia: criterion.performanceMedia, performanceMin: criterion.performanceMin,
         }));
 
-        generalCriteriaResult.mainCriteria = mainCriteria;
-
         const finalResult = {
             leafs: null,
-            mainCriteria: null,
-            gerenalCriteria: null,
+            mainCriteria: criteriaList,
+            final: {
+                children: mainCriteria, options: finalOptions, performanceMax, performanceMedia, performanceMin,
+            },
         };
 
-        finalResult.mainCriteria = criteriaList;
-        finalResult.gerenalCriteria = generalCriteriaResult;
         return finalResult;
     }
 
