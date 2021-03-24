@@ -128,11 +128,20 @@ class Util {
             name: criterion.name, title: criterion.title, performanceMax: criterion.performanceMax, performanceMedia: criterion.performanceMedia, performanceMin: criterion.performanceMin,
         }));
 
+        const barChart = [[], []];
+        for (let index = 0; index < mainCriteria.length; index += 1) {
+            const mult = ((mainCriteria[index].performanceMedia + Math.abs(mainCriteria[index].performanceMin)) / (Math.abs(mainCriteria[index].performanceMin) + mainCriteria[index].performanceMax + 1)) * 100;
+            barChart[0].push(100);
+            barChart[1].push(Math.round(mult));
+        }
+        barChart[0].push(100);
+        barChart[1].push(Math.round(((performanceMedia + Math.abs(performanceMin)) / (Math.abs(performanceMin) + performanceMax + 1)) * 100));
+
         const finalResult = {
             leafs: null,
             mainCriteria: criteriaList,
             final: {
-                children: mainCriteria, options: finalOptions, performanceMax, performanceMedia, performanceMin,
+                children: mainCriteria, options: finalOptions, performanceMax, performanceMedia, performanceMin, barChart,
             },
         };
 
