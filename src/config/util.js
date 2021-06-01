@@ -135,11 +135,20 @@ class Util {
             name: criterion.name, title: criterion.title, performanceMax: criterion.performanceMax, performanceMedia: criterion.performanceMedia, performanceMin: criterion.performanceMin,
         }));
 
+        // prune main criteria with childs
+        const leafs = [];
+        for (let index = 0; index < criteriaList.length; index += 1) {
+            if (criteriaList[index].children) {
+                this.returnLeafs(criteriaList[index].children, leafs);
+            }
+        }
+        console.log(leafs);
+
         // call buildBarChart
         const barChart = this.buildBarChart(mainCriteria, performanceMedia, performanceMin, performanceMax);
 
         const finalResult = {
-            leafs: null,
+            leafs,
             mainCriteria: criteriaList,
             final: {
                 children: mainCriteria, options: finalOptions, performanceMax, performanceMedia, performanceMin, barChart,
@@ -200,6 +209,15 @@ class Util {
         barChart[1].push(Math.round(((performanceMedia + Math.abs(performanceMin)) / (Math.abs(performanceMin) + performanceMax + 1)) * 100));
 
         return barChart;
+    }
+
+    returnLeafs(node, leafs) {
+        for (let index = 0; index < node.length; index += 1) {
+            if (node[index].children) {
+                leafs.push(node[index]);
+                this.returnLeafs(node[index].children, leafs);
+            }
+        }
     }
 }
 export default new Util();
