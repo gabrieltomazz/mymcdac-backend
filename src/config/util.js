@@ -3,6 +3,7 @@ import ScaleResult from '../app/models/ScaleResult';
 let listCriteria = [];
 
 class Util {
+    // build list in a Criteria Tree
     listToTree(list) {
         const map = [];
         const roots = [];
@@ -25,6 +26,7 @@ class Util {
         return roots;
     }
 
+    // calculate values for Criteria Options
     async calculateLeafTree(list, options, project) {
         listCriteria = list;
         options.forEach((element) => {
@@ -52,6 +54,7 @@ class Util {
         return listCriteria;
     }
 
+    // calculate negative values for Options
     async setNegativeValues(position_criterion, position_option, steps) {
         let i = 0;
         while (i !== position_option) {
@@ -119,23 +122,21 @@ class Util {
             }
         }
 
+        // call function to build Criteria Tree
         criteriaList = this.listToTree(criteriaList);
+
+        // call CalculateFinalResult
         const {
             finalOptions, performanceMax, performanceMedia, performanceMin,
-        } = this.calculaFinalResult(criteriaList, options);
+        } = this.calculateFinalResult(criteriaList, options);
 
+        // create Array with Main Criteria
         const mainCriteria = criteriaList.map((criterion) => ({
             name: criterion.name, title: criterion.title, performanceMax: criterion.performanceMax, performanceMedia: criterion.performanceMedia, performanceMin: criterion.performanceMin,
         }));
 
-        const barChart = [[], []];
-        for (let index = 0; index < mainCriteria.length; index += 1) {
-            const mult = ((mainCriteria[index].performanceMedia + Math.abs(mainCriteria[index].performanceMin)) / (Math.abs(mainCriteria[index].performanceMin) + mainCriteria[index].performanceMax + 1)) * 100;
-            barChart[0].push(100);
-            barChart[1].push(Math.round(mult));
-        }
-        barChart[0].push(100);
-        barChart[1].push(Math.round(((performanceMedia + Math.abs(performanceMin)) / (Math.abs(performanceMin) + performanceMax + 1)) * 100));
+        // call buildBarChart
+        const barChart = this.buildBarChart(mainCriteria, performanceMedia, performanceMin, performanceMax);
 
         const finalResult = {
             leafs: null,
@@ -148,12 +149,13 @@ class Util {
         return finalResult;
     }
 
-    calculaFinalResult(criteriaList, options) {
+    // Calculate values for Tree Criteria
+    calculateFinalResult(criteriaList, options) {
         for (let x = 0; x < criteriaList.length; x += 1) {
             if (criteriaList[x].children.length > 0) {
                 const {
                     finalOptions, performanceMax, performanceMedia, performanceMin,
-                } = this.calculaFinalResult(criteriaList[x].children, criteriaList[x].options);
+                } = this.calculateFinalResult(criteriaList[x].children, criteriaList[x].options);
                 criteriaList[x].options = finalOptions;
                 criteriaList[x].performanceMax = performanceMax;
                 criteriaList[x].performanceMedia = performanceMedia;
@@ -165,6 +167,7 @@ class Util {
         })), options);
     }
 
+    // calculate criterion
     calculateScale(ListSons, options) {
         const finalOptions = options;
 
@@ -182,6 +185,21 @@ class Util {
         return {
             finalOptions, performanceMax, performanceMedia, performanceMin,
         };
+    }
+
+    // build Chart Bar for Main Criteria
+    buildBarChart(mainCriteria, performanceMedia, performanceMin, performanceMax) {
+        const barChart = [[], []];
+
+        for (let index = 0; index < mainCriteria.length; index += 1) {
+            const mult = ((mainCriteria[index].performanceMedia + Math.abs(mainCriteria[index].performanceMin)) / (Math.abs(mainCriteria[index].performanceMin) + mainCriteria[index].performanceMax + 1)) * 100;
+            barChart[0].push(100);
+            barChart[1].push(Math.round(mult));
+        }
+        barChart[0].push(100);
+        barChart[1].push(Math.round(((performanceMedia + Math.abs(performanceMin)) / (Math.abs(performanceMin) + performanceMax + 1)) * 100));
+
+        return barChart;
     }
 }
 export default new Util();
