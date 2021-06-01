@@ -181,7 +181,7 @@ class Util {
         const finalOptions = options;
 
         for (let index = 0; index < finalOptions.length; index += 1) {
-            finalOptions[index].value = (ListSons.reduce((resultado, opt) => resultado + (opt.options[index].value * opt.percent), 0)) / 100;
+            finalOptions[index].value = Math.round((ListSons.reduce((resultado, opt) => resultado + (opt.options[index].value * opt.percent), 0)) / 100);
         }
 
         const [performanceMax, performanceMedia, performanceMin] = ListSons.reduce((resultado, opt) => {
@@ -213,7 +213,7 @@ class Util {
 
     returnLeafs(node, leafs) {
         for (let index = 0; index < node.length; index += 1) {
-            if (node[index].children) {
+            if (node[index].children.length > 0) {
                 leafs.push(node[index]);
                 this.returnLeafs(node[index].children, leafs);
             }
