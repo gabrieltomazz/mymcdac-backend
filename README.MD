@@ -20,6 +20,7 @@ Getting started
     * yarn add yup (Data validator )
     * yarn add cors ( Allow to others applications access API) 
     * yarn add sequelize-hierarchy ( Provide Hierarchy) 
+    * yarn add googleapis ( Google Api Autentication )
 
 
 * Sequelize

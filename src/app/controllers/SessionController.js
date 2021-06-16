@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 
 import User from '../models/User';
 import AuthConfig from '../../config/auth';
+import loginGoogle from '../../config/google-util';
 
 class SessionController {
     async store(req, res) {
@@ -41,6 +42,14 @@ class SessionController {
                 expiresIn: AuthConfig.expiresIn,
             }),
         });
+    }
+
+    async googleAuth(req, res) {
+        return res.redirect(loginGoogle.urlGoogle());
+    }
+
+    async callbackGoogle(req, res) {
+        return res.json(loginGoogle.getGoogleAccountFromCode(req.query.code));
     }
 }
 

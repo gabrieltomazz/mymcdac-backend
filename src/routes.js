@@ -13,6 +13,8 @@ const routes = new Router();
 
 routes.post('/register', UserController.store);
 routes.post('/login', SessionController.store);
+routes.get('/login-google', SessionController.googleAuth);
+routes.get('/callback-google/', SessionController.callbackGoogle);
 
 routes.use(authMiddleware);
 

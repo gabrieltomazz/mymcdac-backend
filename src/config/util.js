@@ -142,7 +142,6 @@ class Util {
                 this.returnLeafs(criteriaList[index].children, leafs);
             }
         }
-        console.log(leafs);
 
         // call buildBarChart
         const barChart = this.buildBarChart(mainCriteria, performanceMedia, performanceMin, performanceMax);
