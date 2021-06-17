@@ -85,10 +85,9 @@ class GoogleUtil {
 
         // return so we can login or sign up the user
         return {
-            id: userGoogleId,
-            email: userGoogleEmail,
-            name: userName,
-            tokens, // you can save these to the user if you ever want to get their details without making them log in again
+            provider_id: userGoogleId,
+            userEmail: userGoogleEmail,
+            userName,
         };
     }
 }

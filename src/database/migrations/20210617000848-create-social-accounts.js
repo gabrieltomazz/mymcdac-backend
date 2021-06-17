@@ -1,31 +1,25 @@
 module.exports = {
-    up: async (queryInterface, Sequelize) => queryInterface.createTable('users', {
+    up: async (queryInterface, Sequelize) => queryInterface.createTable('social_accounts', {
         id: {
             type: Sequelize.INTEGER,
             allowNull: false,
             autoIncrement: true,
             primaryKey: true,
         },
-        name: {
+        provider_id: {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        email: {
+        provider: {
             type: Sequelize.STRING,
             allowNull: false,
-            unique: true,
         },
-        university: {
-            type: Sequelize.STRING,
-            allowNull: true,
-        },
-        country: {
-            type: Sequelize.STRING,
-            allowNull: true,
-        },
-        password_hash: {
-            type: Sequelize.STRING,
-            allowNull: true,
+        user_id: {
+            type: Sequelize.INTEGER,
+            reference: { model: 'users', key: 'id' },
+            onUpdate: 'CASCADE',
+            onDelete: 'SET NULL',
+            allowNull: false,
         },
         created_at: {
             type: Sequelize.DATE,
@@ -37,5 +31,5 @@ module.exports = {
         },
     }),
 
-    down: async (queryInterface) => queryInterface.dropTable('users'),
+    down: async (queryInterface) => queryInterface.dropTable('social_accounts'),
 };

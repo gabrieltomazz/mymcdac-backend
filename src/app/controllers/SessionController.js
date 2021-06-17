@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import * as Yup from 'yup';
 
 import User from '../models/User';
+import SocialAccount from '../models/SocialAccount';
 import AuthConfig from '../../config/auth';
 import loginGoogle from '../../config/google-util';
 
@@ -49,7 +50,48 @@ class SessionController {
     }
 
     async callbackGoogle(req, res) {
-        return res.json(loginGoogle.getGoogleAccountFromCode(req.query.code));
+        const { provider_id, userEmail, userName } = await loginGoogle.getGoogleAccountFromCode(req.query.code);
+
+        const userSocial = await SocialAccount.findOne({
+            where: { provider_id },
+            include: {
+                model: User,
+                attributes: ['id', 'name', 'email'],
+            },
+        });
+
+        let id = null;
+        let name = null;
+        let email = null;
+
+        if (!userSocial) {
+            const userData = await User.create({ name: userName, email: userEmail });
+
+            if (!userData) {
+                return res.status(400).json({ error: { mensagem: 'Error ao criar Usuário!' } });
+            }
+
+            await SocialAccount.create({ user_id: userData.id, provider: 'google', provider_id });
+
+            id = userData.id;
+            name = userData.name;
+            email = userData.email;
+        } else {
+            id = userSocial.User.id;
+            name = userSocial.User.name;
+            email = userSocial.User.email;
+        }
+
+        return res.json({
+            user: {
+                id,
+                name,
+                email,
+            },
+            token: jwt.sign({ id }, AuthConfig.secret, {
+                expiresIn: AuthConfig.expiresIn,
+            }),
+        });
     }
 }
 
