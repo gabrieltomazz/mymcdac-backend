@@ -45,7 +45,7 @@ class SessionController {
     }
 
     async googleAuth(req, res) {
-        return res.redirect(loginGoogle.urlGoogle());
+        return res.json(loginGoogle.urlGoogle());
     }
 
     async callbackGoogle(req, res) {
