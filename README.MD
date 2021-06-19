@@ -21,7 +21,8 @@ Getting started
     * yarn add cors ( Allow to others applications access API) 
     * yarn add sequelize-hierarchy ( Provide Hierarchy) 
     * yarn add googleapis ( Google Api Autentication )
-
+    * yarn add query-string ( Append parameters to url )
+    * yarn add axios ( Promise based HTTP client )
 
 * Sequelize
     * Migrations

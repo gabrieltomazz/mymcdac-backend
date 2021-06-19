@@ -3,9 +3,9 @@ import { google } from 'googleapis';
 require('dotenv').config();
 
 const googleConfig = {
-    clientId: process.env.CLIENTID, // e.g. asdfghjkljhgfdsghjk.apps.googleusercontent.com
-    clientSecret: process.env.CLIENTSECRET, // e.g. _ASDFA%DFASDFASDFASD#FAD-
-    redirect: process.env.REDIRECT, // this must match your google api settings
+    clientId: process.env.GOOGLE_CLIENTID, // e.g. asdfghjkljhgfdsghjk.apps.googleusercontent.com
+    clientSecret: process.env.GOOGLE_CLIENTSECRET, // e.g. _ASDFA%DFASDFASDFASD#FAD-
+    redirect: process.env.GOOGLE_REDIRECT, // this must match your google api settings
 };
 
 /**
