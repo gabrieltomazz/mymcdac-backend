@@ -96,7 +96,7 @@ class SessionController {
     }
 
     async facebookAuth(req, res) {
-        return res.redirect(loginFacebook.urlFacebook());
+        return res.json(loginFacebook.urlFacebook());
     }
 
     async callbackFacebook(req, res) {
