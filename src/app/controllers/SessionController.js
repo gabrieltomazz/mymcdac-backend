@@ -6,6 +6,7 @@ import SocialAccount from '../models/SocialAccount';
 import AuthConfig from '../../config/auth';
 import loginGoogle from '../../config/google-util';
 import loginFacebook from '../../config/facebook-util';
+import Mail from '../../lib/Mail';
 
 class SessionController {
     async store(req, res) {
@@ -143,6 +144,42 @@ class SessionController {
                 expiresIn: AuthConfig.expiresIn,
             }),
         });
+    }
+
+    async forgetPassword(req, res) {
+        const schema = Yup.object().shape({
+            email: Yup.string().required(),
+        });
+
+        if (!(await schema.isValid(req.body))) {
+            return res.status(400).json({ error: { mensagem: 'Dados Inválidos!' } });
+        }
+
+        const { email } = req.body;
+
+        const user = await User.findOne({
+            where: { email },
+        });
+
+        if (!user) {
+            return res.status(401).json({ error: { mensagem: 'E-mail não cadastrado!' } });
+        }
+        // {{!-- <p> Clique no link {{ link }} para trocar sua senha </p> --}}
+        // ${user.name} <${user.email}
+        try {
+            await Mail.sendMail({
+                to: `${user.name} <${user.email}>`,
+                subject: 'Recuperar Senha',
+                template: 'forgetpassword',
+                context: {
+                    link: 'https://mymcdac.rabelo.org/forgetpassoword%asdbahjsbfas',
+                },
+            });
+
+            return res.status(200).json({ succcess: { mensagem: 'E-mail enviado com Sucesso!' } });
+        } catch (error) {
+            return res.status(400).json({ error: { mensagem: 'Erro! Ao enviar email.' } });
+        }
     }
 }
 

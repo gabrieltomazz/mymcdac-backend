@@ -22,7 +22,9 @@ Getting started
     * yarn add sequelize-hierarchy ( Provide Hierarchy) 
     * yarn add googleapis ( Google Api Autentication )
     * yarn add query-string ( Append parameters to url )
-    * yarn add axios ( Promise based HTTP client )
+    * yarn add axios ( Promise based HTTP client 
+    * yarn add nodemailer ( email manager )
+    * yarn add express-handlebars nodemailer-express-handlebars ( Email template manager ))
 
 * Sequelize
     * Migrations
