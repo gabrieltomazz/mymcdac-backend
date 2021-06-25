@@ -37,7 +37,25 @@ module.exports = {
             type: Sequelize.DATE,
             allowNull: false,
         },
-    }),
+    }).then(() => queryInterface.addConstraint('scale_results', {
+        fields: ['criterion_id'],
+        type: 'foreign key',
+        references: {
+            table: 'criteria',
+            field: 'id',
+        },
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+    })).then(() => queryInterface.addConstraint('scale_results', {
+        fields: ['option_answer_id'],
+        type: 'foreign key',
+        references: {
+            table: 'option_answers',
+            field: 'id',
+        },
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+    })),
 
     down: async (queryInterface) => queryInterface.dropTable('scale_results'),
 };

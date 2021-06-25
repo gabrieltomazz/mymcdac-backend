@@ -16,6 +16,7 @@ module.exports = {
             onUpdate: 'CASCADE',
             onDelete: 'SET NULL',
             allowNull: false,
+            constraints: true,
         },
         created_at: {
             type: Sequelize.DATE,
@@ -25,7 +26,16 @@ module.exports = {
             type: Sequelize.DATE,
             allowNull: false,
         },
-    }),
+    }).then(() => queryInterface.addConstraint('scales', {
+        fields: ['user_id'],
+        type: 'foreign key',
+        references: {
+            table: 'users',
+            field: 'id',
+        },
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+    })),
 
     down: async (queryInterface) => queryInterface.dropTable('scales'),
 };

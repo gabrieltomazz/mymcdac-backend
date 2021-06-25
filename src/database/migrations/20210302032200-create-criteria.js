@@ -37,7 +37,7 @@ module.exports = {
             type: Sequelize.INTEGER,
             reference: { model: 'project', key: 'id' },
             onUpdate: 'CASCADE',
-            onDelete: 'SET NULL',
+            onDelete: 'CASCADE',
             allowNull: false,
         },
         created_at: {
@@ -48,7 +48,25 @@ module.exports = {
             type: Sequelize.DATE,
             allowNull: false,
         },
-    }),
+    }).then(() => queryInterface.addConstraint('criteria', {
+        fields: ['criterion_id'],
+        type: 'foreign key',
+        references: {
+            table: 'criteria',
+            field: 'id',
+        },
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+    })).then(() => queryInterface.addConstraint('criteria', {
+        fields: ['project_id'],
+        type: 'foreign key',
+        references: {
+            table: 'projects',
+            field: 'id',
+        },
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+    })),
 
     down: async (queryInterface) => queryInterface.dropTable('criteria'),
 };

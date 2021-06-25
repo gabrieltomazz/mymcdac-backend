@@ -29,7 +29,16 @@ module.exports = {
             type: Sequelize.DATE,
             allowNull: false,
         },
-    }),
+    }).then(() => queryInterface.addConstraint('social_accounts', {
+        fields: ['user_id'],
+        type: 'foreign key',
+        references: {
+            table: 'users',
+            field: 'id',
+        },
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+    })),
 
     down: async (queryInterface) => queryInterface.dropTable('social_accounts'),
 };
