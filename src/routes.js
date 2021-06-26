@@ -8,6 +8,7 @@ import ProjectController from './app/controllers/ProjectController';
 import authMiddleware from './app/middlewares/auth';
 import CriteriaController from './app/controllers/CriteriaController';
 import ScaleResultController from './app/controllers/ScaleResultController';
+import OptionsAnswerController from './app/controllers/OptionsAnswerController';
 
 const routes = new Router();
 
@@ -46,5 +47,7 @@ routes.delete('/projects/:id/criteria/:criterion_id', CriteriaController.delete)
 routes.get('/projects/:id/criteria/modes', ScaleResultController.getMedianScale);
 routes.patch('/projects/:id/criteria/modes', ScaleResultController.update);
 routes.get('/projects/:id/criteria/final-result', ScaleResultController.getFinalResult);
+
+routes.delete('/option-anwser/:id', OptionsAnswerController.delete);
 
 export default routes;
