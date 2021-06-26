@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 
 import Scale from '../models/Scale';
 import OptionAnswer from '../models/OptionAnswer';
+import Project from '../models/Project';
 
 class ScaleController {
     async store(req, res) {
@@ -151,6 +152,14 @@ class ScaleController {
         // verify if id is valid
         if (Number.isNaN(scale_id)) {
             return res.status(400).json({ error: { mensagem: 'Scale id Inválido!' } });
+        }
+
+        const projects = await Project.findOne({
+            where: { scale_id },
+        });
+
+        if (projects) {
+            return res.status(401).json({ error: { mensagem: 'Erro! Existem Projetos vinculados a está escala.' } });
         }
 
         try {
