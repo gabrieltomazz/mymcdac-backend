@@ -60,7 +60,7 @@ class ScaleController {
         // Fields Validation
         const schema = Yup.array().of(
             Yup.object().shape({
-                id: Yup.number().required(),
+                id: Yup.number().nullable(true),
                 answer: Yup.string().required(),
                 good: Yup.boolean().required(),
                 neutral: Yup.boolean().required(),
@@ -96,17 +96,24 @@ class ScaleController {
                 description,
             });
 
+            // update option
             optionsAnswers.forEach(async (element) => {
-                const options = await OptionAnswer.findByPk(element.id);
                 try {
-                    // update options
-                    await options.update(element);
+                    if (element.id) {
+                        const options = await OptionAnswer.findByPk(element.id);
+                        // update options
+                        await options.update(element);
+                        options.save();
+                    } else {
+                        element.scale_id = scale_id;
+                        await OptionAnswer.create(element);
+                    }
+
+                    return true;
                 } catch (error) {
                     return res.status(400).json(error);
                 }
-                return null;
             });
-
             const scales = await Scale.findOne({
                 where: { id: scale_id },
                 attributes: ['id', 'description'],
@@ -116,7 +123,6 @@ class ScaleController {
                     attributes: ['id', 'answer', 'neutral', 'good'],
                 },
             });
-
             return res.status(200).json(scales);
         } catch (error) {
             return res.status(400).json({ error: { mensagem: 'Erro ao atualizar Scale!' } });
