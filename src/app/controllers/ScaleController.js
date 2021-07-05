@@ -97,7 +97,7 @@ class ScaleController {
             });
 
             // update option
-            optionsAnswers.forEach(async (element) => {
+            optionsAnswers.forEach(async (element, index, arr) => {
                 try {
                     if (element.id) {
                         const options = await OptionAnswer.findByPk(element.id);
@@ -109,21 +109,25 @@ class ScaleController {
                         await OptionAnswer.create(element);
                     }
 
+                    if (index === (arr.length - 1)) {
+                        const scales = await Scale.findOne({
+                            where: { id: scale_id },
+                            attributes: ['id', 'description'],
+                            include: {
+                                model: OptionAnswer,
+                                as: 'optionAnswers',
+                                attributes: ['id', 'answer', 'neutral', 'good'],
+                            },
+                        });
+                        return res.status(200).json(scales);
+                    }
+
                     return true;
                 } catch (error) {
                     return res.status(400).json(error);
                 }
             });
-            const scales = await Scale.findOne({
-                where: { id: scale_id },
-                attributes: ['id', 'description'],
-                include: {
-                    model: OptionAnswer,
-                    as: 'optionAnswers',
-                    attributes: ['id', 'answer', 'neutral', 'good'],
-                },
-            });
-            return res.status(200).json(scales);
+            return res.status(400).json({ error: { mensagem: 'Erro ao atualizar Scale!' } });
         } catch (error) {
             return res.status(400).json({ error: { mensagem: 'Erro ao atualizar Scale!' } });
         }
