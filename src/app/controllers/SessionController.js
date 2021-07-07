@@ -176,7 +176,7 @@ class SessionController {
                 template: 'forgetpassword',
                 context: {
                     name: user.name,
-                    link: `${ForgetPasswordConfig.frontUrl}/new-password/${token}`,
+                    link: `${ForgetPasswordConfig.frontUrl}/recover-password/new-password/${token}`,
                 },
             });
 
@@ -223,7 +223,7 @@ class SessionController {
 
         const schema = Yup.object().shape({
             password: Yup.string().required().min(6),
-            passwordConfirm: Yup.string()
+            password_confirm: Yup.string()
                 .when('password', (password, field) => (password ? field.required().oneOf([Yup.ref('password')]) : field)),
         });
 
