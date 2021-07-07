@@ -1,11 +1,13 @@
 import jwt from 'jsonwebtoken';
+import { promisify } from 'util';
 import * as Yup from 'yup';
 
 import User from '../models/User';
 import SocialAccount from '../models/SocialAccount';
 import AuthConfig from '../../config/auth';
-import loginGoogle from '../../config/google-util';
-import loginFacebook from '../../config/facebook-util';
+import ForgetPasswordConfig from '../../config/forget-password';
+import LoginGoogle from '../../config/google-util';
+import LoginFacebook from '../../config/facebook-util';
 import Mail from '../../lib/Mail';
 
 class SessionController {
@@ -48,11 +50,11 @@ class SessionController {
     }
 
     async googleAuth(req, res) {
-        return res.json(loginGoogle.urlGoogle());
+        return res.json(LoginGoogle.urlGoogle());
     }
 
     async callbackGoogle(req, res) {
-        const { provider_id, userEmail, userName } = await loginGoogle.getGoogleAccountFromCode(req.query.code);
+        const { provider_id, userEmail, userName } = await LoginGoogle.getGoogleAccountFromCode(req.query.code);
 
         const userSocial = await SocialAccount.findOne({
             where: { provider_id },
@@ -97,12 +99,12 @@ class SessionController {
     }
 
     async facebookAuth(req, res) {
-        return res.json(loginFacebook.urlFacebook());
+        return res.json(LoginFacebook.urlFacebook());
     }
 
     async callbackFacebook(req, res) {
-        const access_token = await loginFacebook.getAccessTokenFromCode(req.query.code);
-        const { provider_id, userEmail, userName } = await loginFacebook.getFacebookUserData(access_token);
+        const access_token = await LoginFacebook.getAccessTokenFromCode(req.query.code);
+        const { provider_id, userEmail, userName } = await LoginFacebook.getFacebookUserData(access_token);
 
         const userSocial = await SocialAccount.findOne({
             where: { provider_id },
@@ -164,21 +166,88 @@ class SessionController {
         if (!user) {
             return res.status(401).json({ error: { mensagem: 'E-mail não cadastrado!' } });
         }
-        // {{!-- <p> Clique no link {{ link }} para trocar sua senha </p> --}}
-        // ${user.name} <${user.email}
+
+        const token = jwt.sign({ id: user.id }, ForgetPasswordConfig.secret, { expiresIn: ForgetPasswordConfig.expiresIn });
+
         try {
             await Mail.sendMail({
                 to: `${user.name} <${user.email}>`,
                 subject: 'Recuperar Senha',
                 template: 'forgetpassword',
                 context: {
-                    link: 'https://mymcdac.rabelo.org/forgetpassoword%asdbahjsbfas',
+                    name: user.name,
+                    link: `${ForgetPasswordConfig.frontUrl}/new-password/${token}`,
                 },
             });
 
             return res.status(200).json({ succcess: { mensagem: 'E-mail enviado com Sucesso!' } });
         } catch (error) {
             return res.status(400).json({ error: { mensagem: 'Erro! Ao enviar email.' } });
+        }
+    }
+
+    async verifyToken(req, res) {
+        const { token } = req.params;
+
+        // verify if id is valid
+        if (Number.isNaN(token)) {
+            return res.status(401).json({ error: 'Token INVÁLIDO' });
+        }
+
+        try {
+            const decoded = await promisify(jwt.verify)(token, ForgetPasswordConfig.secret);
+
+            const userId = decoded.id;
+
+            const user = await User.findOne({
+                where: { id: userId },
+            });
+
+            if (!user) {
+                return res.status(401).json({ error: 'Token INVÁLIDO' });
+            }
+
+            return res.status(200).json('Ok!');
+        } catch (err) {
+            return res.status(401).json({ error: 'Token INVÁLIDO' });
+        }
+    }
+
+    async changePassoWord(req, res) {
+        const { token } = req.params;
+
+        // verify if id is valid
+        if (Number.isNaN(token)) {
+            return res.status(401).json({ error: 'Token INVÁLIDO' });
+        }
+
+        const schema = Yup.object().shape({
+            password: Yup.string().required().min(6),
+            passwordConfirm: Yup.string()
+                .when('password', (password, field) => (password ? field.required().oneOf([Yup.ref('password')]) : field)),
+        });
+
+        if (!(await schema.isValid(req.body))) {
+            return res.status(400).json({ error: { mensagem: 'Dados Inválidos!' } });
+        }
+
+        try {
+            const decoded = await promisify(jwt.verify)(token, ForgetPasswordConfig.secret);
+
+            const userId = decoded.id;
+
+            const user = await User.findOne({
+                where: { id: userId },
+            });
+
+            if (!user) {
+                return res.status(401).json({ error: 'Token INVÁLIDO' });
+            }
+            await user.update(req.body);
+
+            return res.status(200).json('Senha Atualizada com Sucesso!');
+        } catch (err) {
+            return res.status(401).json({ error: 'Token INVÁLIDO' });
         }
     }
 }
