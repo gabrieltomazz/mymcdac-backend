@@ -18,6 +18,9 @@ routes.get('/login-google', SessionController.googleAuth);
 routes.get('/callback-google/', SessionController.callbackGoogle);
 routes.get('/login-facebook', SessionController.facebookAuth);
 routes.get('/callback-facebook', SessionController.callbackFacebook);
+routes.post('/forget-password', SessionController.forgetPassword);
+routes.get('/new-password/:token', SessionController.verifyToken);
+routes.post('/new-password/:token', SessionController.changePassoWord);
 
 routes.use(authMiddleware);
 
