@@ -10,8 +10,6 @@ class ProjectController {
             project_goal: Yup.string().required(),
             performance: Yup.string().required(),
             steps: Yup.number().required(),
-            start_date: Yup.date().required(),
-            end_date: Yup.date().required(),
             scale_id: Yup.number().required(),
         });
 
@@ -44,8 +42,6 @@ class ProjectController {
             project_goal: Yup.string(),
             performance: Yup.string(),
             steps: Yup.number(),
-            start_date: Yup.date(),
-            end_date: Yup.date(),
             scale_id: Yup.number(),
         });
 

@@ -7,8 +7,6 @@ class Project extends Model {
                 project_goal: Sequelize.STRING,
                 performance: Sequelize.STRING,
                 steps: Sequelize.INTEGER,
-                start_date: Sequelize.DATE,
-                end_date: Sequelize.DATE,
             },
             {
                 sequelize,
