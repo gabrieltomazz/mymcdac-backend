@@ -185,8 +185,6 @@ class ProjectController {
                     }
                 }
             }
-
-            // TODO: @Gabriel Ver se esse jeito esta correto ou se tem outro jeito melhor, penso que esse codigo é duplicado da funcao async getProjectById(req, res)
             const clonedProject = await Project.findOne({
                 where: { id: newProject.id },
                 include: {
