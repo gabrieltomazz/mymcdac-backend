@@ -186,9 +186,17 @@ class ProjectController {
                 }
             }
 
-            return res.status(200).json({
-                listCriteria,
+            // TODO: @Gabriel Ver se esse jeito esta correto ou se tem outro jeito melhor, penso que esse codigo é duplicado da funcao async getProjectById(req, res)
+            const clonedProject = await Project.findOne({
+                where: { id: newProject.id },
+                include: {
+                    model: Scale,
+                    as: 'scale',
+                    attributes: ['id', 'description'],
+                },
             });
+
+            return res.status(200).json(clonedProject);
         } catch (error) {
             return res.status(400).json({ error: { mensagem: 'Erro! Falha ao duplicar projeto.' } });
         }
