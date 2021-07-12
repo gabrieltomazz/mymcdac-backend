@@ -68,8 +68,13 @@ class CriteriaController {
 
         try {
             const criterionResult = await Criteria.findByPk(id_criterion);
-            const { id, name, title } = await criterionResult.update(criterion);
-            return res.status(200).json({ id, name, title });
+            const {
+                id, name, title, percent,
+            } = await criterionResult.update(criterion);
+
+            return res.status(200).json({
+                id, name, title, percent,
+            });
         } catch (error) {
             return res.status(400).json({ error: { mensagem: error } });
         }
