@@ -38,6 +38,7 @@ routes.put('/projects', ProjectController.update);
 routes.get('/projects/user', ProjectController.getProjectByUserId);
 routes.get('/projects/:id', ProjectController.getProjectById);
 routes.delete('/projects/:id', ProjectController.delete);
+routes.post('/projects/duplicate-project', ProjectController.duplicateProject);
 
 routes.post('/projects/:id/criteria', CriteriaController.store);
 routes.get('/projects/:id/criteria', CriteriaController.getCriteriaByProjectId);
