@@ -170,15 +170,17 @@ class SessionController {
         const token = jwt.sign({ id: user.id }, ForgetPasswordConfig.secret, { expiresIn: ForgetPasswordConfig.expiresIn });
 
         try {
-            await Mail.sendMail({
+            const message = {
                 to: `${user.name} <${user.email}>`,
                 subject: 'Recuperar Senha',
                 template: 'forgetpassword',
                 context: {
                     name: user.name,
+                    homepage: ForgetPasswordConfig.frontUrl,
                     link: `${ForgetPasswordConfig.frontUrl}/recover-password/new-password/${token}`,
                 },
-            });
+            };
+            await Mail.sendMail(message);
 
             return res.status(200).json({ succcess: { mensagem: 'E-mail enviado com Sucesso!' } });
         } catch (error) {

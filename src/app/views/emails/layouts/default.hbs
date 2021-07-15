@@ -1,5 +1,41 @@
-<div style="font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.6; color: #222; max-width: 600px ">
-    {{{ body }}}
-    {{> footer }}
+<html lang="en">
 
-</div>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+</head>
+
+<body style="font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.6; color: #222;">
+    <center style="background-color: #dde0de">
+        <table class="table" cellpadding="0" cellspacing="0">
+            <tr>
+                <td class="bg-background m-4" style="background-color: #FDF8F5; background-color: rgb(253, 248, 245); margin: 1rem; width: 600px;" width="600" bgcolor="rgb(253, 248, 245)">
+                    <center>
+                        <table class="table pt-4" cellpadding="0" cellspacing="0" style="padding-top: 1rem;">
+                            <tr>
+                                <td>
+                                    <a class="text-title" href="{{homepage}}" style="color: inherit; text-decoration: inherit; font-size: 1.25rem;">
+                                        <strong>MyMcda-c</strong>
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                    </center>
+                    <table class="table pt-20 m-4" cellpadding="0" cellspacing="0" style="padding-top: 5rem; margin: 1rem;">
+                        <tr>
+                            {{{ body }}}
+                        </tr>
+                    </table>
+                    <center>
+                        <table class="table pt-32 text-center pb-4" cellpadding="0" cellspacing="0" style="text-align: center; padding-top: 8rem; padding-bottom: 1rem;" align="center">
+                            <tr>
+                                <td>{{> footer }}</td>
+                            </tr>
+                        </table>
+                    </center>
+                </td>
+            </tr>
+        </table>
+    </center>
+</body></html>
