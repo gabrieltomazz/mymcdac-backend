@@ -132,7 +132,7 @@ class Util {
 
         // create Array with Main Criteria
         const mainCriteria = criteriaList.map((criterion) => ({
-            name: criterion.name, title: criterion.title, performanceMax: criterion.performanceMax, performanceMedia: criterion.performanceMedia, performanceMin: criterion.performanceMin,
+            name: criterion.name, title: criterion.title, percent: criterion.percent, performanceMax: criterion.performanceMax, performanceMedia: criterion.performanceMedia, performanceMin: criterion.performanceMin,
         }));
 
         // prune main criteria with childs
