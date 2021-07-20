@@ -80,6 +80,17 @@ class SessionController {
             id = userData.id;
             name = userData.name;
             email = userData.email;
+
+            const message = {
+                to: `${name} <${email}>`,
+                subject: 'Seja Bem-Vindo',
+                template: 'welcome',
+                context: {
+                    name,
+                },
+            };
+
+            await Mail.sendMail(message);
         } else {
             id = userSocial.User.id;
             name = userSocial.User.name;
@@ -130,6 +141,17 @@ class SessionController {
             id = userData.id;
             name = userData.name;
             email = userData.email;
+
+            const message = {
+                to: `${name} <${email}>`,
+                subject: 'Seja Bem-Vindo',
+                template: 'welcome',
+                context: {
+                    name,
+                },
+            };
+
+            await Mail.sendMail(message);
         } else {
             id = userSocial.User.id;
             name = userSocial.User.name;

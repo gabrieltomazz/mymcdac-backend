@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 
 import User from '../models/User';
 import AuthConfig from '../../config/auth';
+import Mail from '../../lib/Mail';
 
 class UserController {
     async store(req, res) {
@@ -24,6 +25,17 @@ class UserController {
         }
 
         const { id, name, email } = await User.create(req.body);
+
+        const message = {
+            to: `${name} <${email}>`,
+            subject: 'Seja Bem-Vindo',
+            template: 'welcome',
+            context: {
+                name,
+            },
+        };
+
+        await Mail.sendMail(message);
 
         return res.json({
             user: {
