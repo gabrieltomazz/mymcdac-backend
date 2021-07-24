@@ -97,37 +97,31 @@ class ScaleController {
             });
 
             // update option
-            optionsAnswers.forEach(async (element, index, arr) => {
-                try {
-                    if (element.id) {
-                        const options = await OptionAnswer.findByPk(element.id);
-                        // update options
-                        await options.update(element);
-                        options.save();
-                    } else {
-                        element.scale_id = scale_id;
-                        await OptionAnswer.create(element);
-                    }
+            for (let index = 0; index < optionsAnswers.length; index += 1) {
+                const element = optionsAnswers[index];
 
-                    if (index === (arr.length - 1)) {
-                        const scales = await Scale.findOne({
-                            where: { id: scale_id },
-                            attributes: ['id', 'description'],
-                            include: {
-                                model: OptionAnswer,
-                                as: 'optionAnswers',
-                                attributes: ['id', 'answer', 'neutral', 'good'],
-                            },
-                        });
-                        return res.status(200).json(scales);
-                    }
-
-                    return true;
-                } catch (error) {
-                    return res.status(400).json(error);
+                if (element.id) {
+                    const options = await OptionAnswer.findByPk(element.id);
+                    // update options
+                    await options.update(element);
+                    options.save();
+                } else {
+                    element.scale_id = scale_id;
+                    await OptionAnswer.create(element);
                 }
+            }
+
+            const scales = await Scale.findOne({
+                where: { id: scale_id },
+                attributes: ['id', 'description'],
+                include: {
+                    model: OptionAnswer,
+                    as: 'optionAnswers',
+                    attributes: ['id', 'answer', 'neutral', 'good'],
+                },
             });
-            return res.status(400).json({ error: { mensagem: 'Erro ao atualizar Scale!' } });
+
+            return res.status(200).json(scales);
         } catch (error) {
             return res.status(400).json({ error: { mensagem: 'Erro ao atualizar Scale!' } });
         }
