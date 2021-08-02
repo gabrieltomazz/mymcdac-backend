@@ -55,58 +55,9 @@ class SessionController {
 
     async callbackGoogle(req, res) {
         const { provider_id, userEmail, userName } = await LoginGoogle.getGoogleAccountFromCode(req.query.code);
+        const { status, response } = this.createSocialUser(provider_id, userEmail, userName, 'google');
 
-        const userSocial = await SocialAccount.findOne({
-            where: { provider_id },
-            include: {
-                model: User,
-                attributes: ['id', 'name', 'email'],
-            },
-        });
-
-        let id = null;
-        let name = null;
-        let email = null;
-
-        if (!userSocial) {
-            const userData = await User.create({ name: userName, email: userEmail });
-
-            if (!userData) {
-                return res.status(400).json({ error: { mensagem: 'Error ao criar Usuário!' } });
-            }
-
-            await SocialAccount.create({ user_id: userData.id, provider: 'google', provider_id });
-
-            id = userData.id;
-            name = userData.name;
-            email = userData.email;
-
-            const message = {
-                to: `${name} <${email}>`,
-                subject: 'Seja Bem-Vindo',
-                template: 'welcome',
-                context: {
-                    name,
-                },
-            };
-
-            await Mail.sendMail(message);
-        } else {
-            id = userSocial.User.id;
-            name = userSocial.User.name;
-            email = userSocial.User.email;
-        }
-
-        return res.json({
-            user: {
-                id,
-                name,
-                email,
-            },
-            token: jwt.sign({ id }, AuthConfig.secret, {
-                expiresIn: AuthConfig.expiresIn,
-            }),
-        });
+        return res.status(status).json(response);
     }
 
     async facebookAuth(req, res) {
@@ -117,6 +68,12 @@ class SessionController {
         const access_token = await LoginFacebook.getAccessTokenFromCode(req.query.code);
         const { provider_id, userEmail, userName } = await LoginFacebook.getFacebookUserData(access_token);
 
+        const { status, response } = this.createSocialUser(provider_id, userEmail, userName, 'facebook');
+
+        return res.status(status).json(response);
+    }
+
+    async createSocialUser(provider_id, userEmail, userName, provider) {
         const userSocial = await SocialAccount.findOne({
             where: { provider_id },
             include: {
@@ -133,10 +90,13 @@ class SessionController {
             const userData = await User.create({ name: userName, email: userEmail });
 
             if (!userData) {
-                return res.status(400).json({ error: { mensagem: 'Error ao criar Usuário!' } });
+                return {
+                    status: 400,
+                    response: { error: { mensagem: 'Error ao criar Usuário!' } },
+                };
             }
 
-            await SocialAccount.create({ user_id: userData.id, provider: 'facebook', provider_id });
+            await SocialAccount.create({ user_id: userData.id, provider, provider_id });
 
             id = userData.id;
             name = userData.name;
@@ -158,16 +118,19 @@ class SessionController {
             email = userSocial.User.email;
         }
 
-        return res.json({
-            user: {
-                id,
-                name,
-                email,
+        return {
+            status: 200,
+            response: {
+                user: {
+                    id,
+                    name,
+                    email,
+                },
+                token: jwt.sign({ id }, AuthConfig.secret, {
+                    expiresIn: AuthConfig.expiresIn,
+                }),
             },
-            token: jwt.sign({ id }, AuthConfig.secret, {
-                expiresIn: AuthConfig.expiresIn,
-            }),
-        });
+        };
     }
 
     async forgetPassword(req, res) {
@@ -237,7 +200,7 @@ class SessionController {
         }
     }
 
-    async changePassoWord(req, res) {
+    async changePassword(req, res) {
         const { token } = req.params;
 
         // verify if id is valid
