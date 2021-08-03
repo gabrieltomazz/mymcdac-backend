@@ -3,12 +3,12 @@ import { promisify } from 'util';
 import * as Yup from 'yup';
 
 import User from '../models/User';
-import SocialAccount from '../models/SocialAccount';
 import AuthConfig from '../../config/auth';
 import ForgetPasswordConfig from '../../config/forget-password';
 import LoginGoogle from '../../config/google-util';
 import LoginFacebook from '../../config/facebook-util';
 import Mail from '../../lib/Mail';
+import SocialUserUtils from '../../config/social-user-utils';
 
 class SessionController {
     async store(req, res) {
@@ -55,7 +55,7 @@ class SessionController {
 
     async callbackGoogle(req, res) {
         const { provider_id, userEmail, userName } = await LoginGoogle.getGoogleAccountFromCode(req.query.code);
-        const { status, response } = this.createSocialUser(provider_id, userEmail, userName, 'google');
+        const { status, response } = await SocialUserUtils.createSocialUser(provider_id, userEmail, userName, 'google');
 
         return res.status(status).json(response);
     }
@@ -68,69 +68,9 @@ class SessionController {
         const access_token = await LoginFacebook.getAccessTokenFromCode(req.query.code);
         const { provider_id, userEmail, userName } = await LoginFacebook.getFacebookUserData(access_token);
 
-        const { status, response } = this.createSocialUser(provider_id, userEmail, userName, 'facebook');
+        const { status, response } = await SocialUserUtils.createSocialUser(provider_id, userEmail, userName, 'facebook');
 
         return res.status(status).json(response);
-    }
-
-    async createSocialUser(provider_id, userEmail, userName, provider) {
-        const userSocial = await SocialAccount.findOne({
-            where: { provider_id },
-            include: {
-                model: User,
-                attributes: ['id', 'name', 'email'],
-            },
-        });
-
-        let id = null;
-        let name = null;
-        let email = null;
-
-        if (!userSocial) {
-            const userData = await User.create({ name: userName, email: userEmail });
-
-            if (!userData) {
-                return {
-                    status: 400,
-                    response: { error: { mensagem: 'Error ao criar Usuário!' } },
-                };
-            }
-
-            await SocialAccount.create({ user_id: userData.id, provider, provider_id });
-
-            id = userData.id;
-            name = userData.name;
-            email = userData.email;
-
-            const message = {
-                to: `${name} <${email}>`,
-                subject: 'Seja Bem-Vindo',
-                template: 'welcome',
-                context: {
-                    name,
-                },
-            };
-
-            await Mail.sendMail(message);
-        } else {
-            id = userSocial.User.id;
-            name = userSocial.User.name;
-            email = userSocial.User.email;
-        }
-
-        return {
-            status: 200,
-            response: {
-                user: {
-                    id,
-                    name,
-                    email,
-                },
-                token: jwt.sign({ id }, AuthConfig.secret, {
-                    expiresIn: AuthConfig.expiresIn,
-                }),
-            },
-        };
     }
 
     async forgetPassword(req, res) {
